@@ -39,6 +39,16 @@ def serialize_doc(doc):
     return doc
 
 
+@app.on_event("startup")
+def ensure_air_max_price():
+    # Guarantee Nike Air Max 97 price is set to 375 in the database
+    if db is not None:
+        db["sneaker"].update_many(
+            {"name": "Nike Air Max 97"},
+            {"$set": {"price": 375.0}}
+        )
+
+
 @app.get("/")
 def read_root():
     return {"message": "Sneaker Store API running"}
@@ -93,7 +103,7 @@ def seed_products():
         Sneaker(
             name="Nike Air Max 97",
             brand="Nike",
-            price=175.0,
+            price=375.0,
             image="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=80",
             colorway="Silver Bullet",
             description="Wavy lines and visible Air cushioning for a smooth ride.",
